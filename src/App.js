@@ -8,7 +8,7 @@ class App extends Component {
         <div className="bg-info p-4">
           <div className="row align-items-center">
             <div className="col text-center">
-              <img src={this.state.user[0].img} className="c-image__large d-block bg-white m-auto"/>
+              <img src={this.state.user[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
               <select name="" id="" value={this.state.user[0].name} onChange={this.changeSelectUser}>
                 {this.selectUsers()}
               </select>
