@@ -8,8 +8,8 @@ class App extends Component {
         <div className="bg-info p-4">
           <div className="row align-items-center">
             <div className="col text-center">
-              <img src="./images/drink_tapioka_tea_woman.png" alt="drink_tapioka_tea_woman" className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="" defaultValue="hoge" onChange={this.changeSelectUser}>
+              <img src={this.state.user[0].img} className="c-image__large d-block bg-white m-auto"/>
+              <select name="" id="" value={this.state.user[0].name} onChange={this.changeSelectUser}>
                 {this.selectUsers()}
               </select>
             </div>
@@ -58,13 +58,13 @@ class App extends Component {
       claps: Number(localStorage.getItem("claps")),
       user: [
         {
-          img: "",
-          name: ""
+          name: "nakaoka",
+          img: "./images/monster01.png",
+          claps: 100
         }
       ]
     };
 
-    this.selectUsers = this.selectUsers.bind(this);
     this.incrementClap = this.incrementClap.bind(this);
     this.changeSelectUser = this.changeSelectUser.bind(this);
   }
@@ -72,19 +72,34 @@ class App extends Component {
   createUsers() {
     let users = [
       {
-        name: "nakaoka"
+        name: "nakaoka",
+        img: "./images/monster01.png",
+        claps: 100
       },
       {
-        name: "yamamoto"
+        name: "yamamoto",
+        img: "./images/monster02.png",
+        claps: 100
       },
       {
-        name: "tanaka"
+        name: "tanaka",
+        img: "./images/monster03.png",
+        claps: 100
       },
       {
-        name: "inoue"
+        name: "inoue",
+        img: "./images/monster04.png",
+        claps: 100
       },
       {
-        name: "sakamoto"
+        name: "sakamoto",
+        img: "./images/monster05.png",
+        claps: 100
+      },
+      {
+        name: "kimura",
+        img: "./images/monster06.png",
+        claps: 100
       }
     ];
     return users;
@@ -110,9 +125,11 @@ class App extends Component {
 
   changeSelectUser(e) {
     let user = this.state.user;
-    user[0].img = "";
-    user[0].name = e.target.value;
-    this.setState({user: user})
+    let users = this.createUsers();
+    for (let i in users) {
+      if (users[i].name === e.target.value) user[0] = users[i]
+    }
+    this.setState({user: user});
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
