@@ -9,7 +9,7 @@ class App extends Component {
           <div className="row align-items-center">
             <div className="col text-center">
               <img src={this.state.user[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="" value={this.state.user[0].name} onChange={this.changeUser}>
+              <select name="" id="" value={this.state.user[0].id} onChange={this.changeUser}>
                 {this.selectUsers()}
               </select>
             </div>
@@ -20,8 +20,8 @@ class App extends Component {
         <div className="bg-light p-4">
           <div className="row align-items-center">
             <div className="col-4 text-center">
-              <img src="./images/drink_tapioka_tea_woman.png" alt="drink_tapioka_tea_woman" className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="">
+              <img src={this.state.praiseUser[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
+              <select name="" id="" value={this.state.praiseUser[0].id} onChange={this.changePraiseUsers}>
                 {this.selectPraiseUsers()}
               </select>
             </div>
@@ -53,49 +53,63 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    localStorage.setItem("claps", "0");
     this.state = {
       user: [
         {
+          id: "1",
           name: "nakaoka",
           img: "./images/monster01.png",
           claps: 100
+        }
+      ],
+      praiseUser: [
+        {
+          id: "2",
+          name: "yamamoto",
+          img: "./images/monster02.png"
         }
       ]
     };
 
     this.incrementClap = this.incrementClap.bind(this);
     this.changeUser = this.changeUser.bind(this);
+    this.changePraiseUsers = this.changePraiseUsers.bind(this);
   }
 
   createUsers() {
     let users = [
       {
+        id: "1",
         name: "nakaoka",
         img: "./images/monster01.png",
         claps: 100
       },
       {
+        id: "2",
         name: "yamamoto",
         img: "./images/monster02.png",
         claps: 100
       },
       {
+        id: "3",
         name: "tanaka",
         img: "./images/monster03.png",
         claps: 100
       },
       {
+        id: "4",
         name: "inoue",
         img: "./images/monster04.png",
         claps: 100
       },
       {
+        id: "5",
         name: "sakamoto",
         img: "./images/monster05.png",
         claps: 100
       },
       {
+        id: "6",
         name: "kimura",
         img: "./images/monster06.png",
         claps: 100
@@ -108,30 +122,52 @@ class App extends Component {
     let users = this.createUsers();
     let options = [];
     for(let i in users) {
-      options.push(<option key={i} value={users[i].name}>{users[i].name}</option>);
+      options.push(<option key={i} value={users[i].id}>{users[i].name}</option>);
     }
     return options;
   }
 
   selectPraiseUsers() {
+    let user = this.state.user[0];
     let users = this.createUsers();
     let options = [];
     for(let i in users) {
-      options.push(<option key={i} value={users[i].name}>{users[i].name}</option>);
+      if (users[i].id !== user.id) options.push(<option key={i} value={users[i].id}>{users[i].name}</option>);
     }
     return options;
   }
 
   changeUser(e) {
     let user = this.state.user;
+    let praiseUser = this.state.praiseUser;
     let users = this.createUsers();
     for (let i in users) {
-      if (users[i].name === e.target.value) user[0] = users[i]
+      if (users[i].id === e.target.value) user[0] = users[i]
     }
     this.setState({user: user});
+
+    // userとpraiseUserの値が同じ場合、praiseUserの値を変更
+    if (user[0].id === praiseUser[0].id) {
+
+      // user.idが1なら、users.idが2の値を返す
+      if (user[0].id === "1") praiseUser[0] = users[1];
+
+      // user.idが1以外なら、users.idが1の値を返す
+      else praiseUser[0] = users[0];
+      this.setState({praiseUser: praiseUser});
+    }
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
+  changePraiseUsers(e) {
+    let user = this.state.praiseUser;
+    let users = this.createUsers();
+    for (let i in users) {
+      if (users[i].id === e.target.value) user[0] = users[i]
+    }
+    this.setState({praiseUser: user});
+    localStorage.setItem('state', JSON.stringify(this.state));
+  }
 
   incrementClap() {
     let claps = this.state.claps;
