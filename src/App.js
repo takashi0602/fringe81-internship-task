@@ -9,11 +9,11 @@ class App extends Component {
           <div className="row align-items-center">
             <div className="col text-center">
               <img src={this.state.user[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="" value={this.state.user[0].name} onChange={this.changeSelectUser}>
+              <select name="" id="" value={this.state.user[0].name} onChange={this.changeUser}>
                 {this.selectUsers()}
               </select>
             </div>
-            <div className="col text-white">拍手できる:100</div>
+            <div className="col text-white">拍手できる:{this.state.user[0].claps}</div>
             <div className="col text-white">拍手された:0</div>
           </div>
         </div>
@@ -55,7 +55,6 @@ class App extends Component {
     super(props);
     localStorage.setItem("claps", "0");
     this.state = {
-      claps: Number(localStorage.getItem("claps")),
       user: [
         {
           name: "nakaoka",
@@ -66,7 +65,7 @@ class App extends Component {
     };
 
     this.incrementClap = this.incrementClap.bind(this);
-    this.changeSelectUser = this.changeSelectUser.bind(this);
+    this.changeUser = this.changeUser.bind(this);
   }
 
   createUsers() {
@@ -123,7 +122,7 @@ class App extends Component {
     return options;
   }
 
-  changeSelectUser(e) {
+  changeUser(e) {
     let user = this.state.user;
     let users = this.createUsers();
     for (let i in users) {
