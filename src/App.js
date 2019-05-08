@@ -26,26 +26,14 @@ class App extends Component {
               </select>
             </div>
             <div className="col-8">
-              <textarea name="" id="" rows="5" className="form-control" placeholder="5文字以上入力して下さい。"/>
+              <textarea name="" id="" rows="5" className="form-control" value={this.state.text} placeholder="5文字以上入力して下さい。" onChange={this.changeTextArea}/>
             </div>
           </div>
           <div className="text-right">
-            <button className="btn btn-primary">投稿</button>
+            <button className="btn btn-primary" onClick={this.submit}>投稿</button>
           </div>
         </div>
-        <div className="p-4">
-          <div>
-            <img src="./images/drink_tapioka_tea_woman.png" alt="drink_tapioka_tea_woman" className="c-image"/>
-            <img src="./images/arrow_right.png" alt="arrow_right" className="c-image"/>
-            <img src="./images/drink_tapioka_tea_woman.png" alt="drink_tapioka_tea_woman" className="c-image"/>
-          </div>
-          <p className="mb-3">hogehogehogehogehogehoge</p>
-          <div className="row m-0">
-            <img src="./images/clap.png" alt="clap" className="c-image__small col-auto p-0" onClick={this.incrementClap}/>
-            <span className="col-auto">{this.state.claps}</span>
-            <span className="col text-right">2019/04/29 22:30</span>
-          </div>
-        </div>
+        <div>{this.state.posts}</div>
         <button className="btn btn-danger mb-3" onClick={this.reset}>リセット</button>
       </div>
     );
@@ -68,12 +56,17 @@ class App extends Component {
           name: "yamamoto",
           img: "./images/monster02.png"
         }
-      ]
+      ],
+      text: "",
+      posts: []
     };
 
     this.incrementClap = this.incrementClap.bind(this);
     this.changeUser = this.changeUser.bind(this);
     this.changePraiseUsers = this.changePraiseUsers.bind(this);
+    this.changeTextArea = this.changeTextArea.bind(this);
+    this.submit = this.submit.bind(this);
+    this.showPosts = this.showPosts.bind(this);
   }
 
   createUsers() {
@@ -132,6 +125,7 @@ class App extends Component {
     let users = this.createUsers();
     let options = [];
     for(let i in users) {
+      // user以外をoptionで表示する
       if (users[i].id !== user.id) options.push(<option key={i} value={users[i].id}>{users[i].name}</option>);
     }
     return options;
@@ -169,11 +163,48 @@ class App extends Component {
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
-  incrementClap() {
-    let claps = this.state.claps;
-    this.setState({claps: ++claps});
-    localStorage.setItem('claps', claps);
+  changeTextArea(e) {
+    this.setState({text: e.target.value});
   }
+
+  submit() {
+    if (this.state.text.length < 5) {
+      alert("5文字以上入力して下さい。")
+      return;
+    }
+    let date = new Date();
+    let newPost = {
+      userImg: this.state.user[0].img,
+      praiseUserImg: this.state.praiseUser[0].img,
+      text: this.state.text,
+      date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+    };
+    this.showPosts(newPost);
+    this.setState({text: ""});
+    localStorage.setItem('state', JSON.stringify(this.state));
+  }
+
+  showPosts(post) {
+    let posts = this.state.posts;
+    posts.unshift(
+      <div className="p-4">
+        <div>
+          <img src={post.userImg} alt={post.userImg} className="c-image"/>
+          <img src="./images/arrow_right.png" alt="arrow_right" className="c-image"/>
+          <img src={post.praiseUserImg} alt={post.praiseUserImg} className="c-image"/>
+        </div>
+        <p className="mb-3">{post.text}</p>
+        <div className="row m-0">
+          <img src="./images/clap.png" alt="clap" className="c-image__small col-auto p-0" onClick={this.incrementClap}/>
+          <span className="col-auto">0</span>
+          <span className="col text-right">{post.date}</span>
+        </div>
+      </div>
+    );
+    this.setState({post: posts});
+  }
+
+  incrementClap() {}
 
   reset() {
     localStorage.clear();
