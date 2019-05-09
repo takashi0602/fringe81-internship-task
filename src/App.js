@@ -41,26 +41,33 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      user: [
-        {
-          id: "1",
-          name: "nakaoka",
-          img: "./images/monster01.png",
-          claps: [100, 0]
-        }
-      ],
-      praiseUser: [
-        {
-          id: "2",
-          name: "yamamoto",
-          img: "./images/monster02.png",
-          claps: [100, 0]
-        }
-      ],
-      text: "",
-      posts: []
-    };
+    if (localStorage.getItem("users")) {
+      this.state = JSON.parse(localStorage.getItem("state"));
+    }
+    else {
+      localStorage.setItem("users", JSON.stringify(this.createUsers()));
+      this.state = {
+        user: [
+          {
+            id: "1",
+            name: "nakaoka",
+            img: "./images/monster01.png",
+            claps: [100, 0]
+          }
+        ],
+        praiseUser: [
+          {
+            id: "2",
+            name: "yamamoto",
+            img: "./images/monster02.png",
+            claps: [100, 0]
+          }
+        ],
+        text: "",
+        posts: []
+      };
+      localStorage.setItem("state", JSON.stringify(this.state));
+    }
 
     this.incrementClap = this.incrementClap.bind(this);
     this.changeUser = this.changeUser.bind(this);
