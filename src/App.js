@@ -187,7 +187,7 @@ class App extends Component {
   showPosts(post) {
     let posts = this.state.posts;
     posts.unshift(
-      <div className="p-4">
+      <div className="p-4" key={posts.length}>
         <div>
           <img src={post.userImg} alt={post.userImg} className="c-image"/>
           <img src="./images/arrow_right.png" alt="arrow_right" className="c-image"/>
