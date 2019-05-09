@@ -13,7 +13,7 @@ class App extends Component {
                 {this.selectUsers()}
               </select>
             </div>
-            <div className="col text-white">拍手できる:{this.state.user[0].claps}</div>
+            <div className="col text-white">拍手できる:{this.state.user[0].claps[1]}</div>
             <div className="col text-white">拍手された:0</div>
           </div>
         </div>
@@ -33,7 +33,7 @@ class App extends Component {
             <button className="btn btn-primary" onClick={this.submit}>投稿</button>
           </div>
         </div>
-        <div>{this.state.posts}</div>
+        <div>{this.hoge()}</div>
         <button className="btn btn-danger mb-3" onClick={this.reset}>リセット</button>
       </div>
     );
@@ -47,14 +47,15 @@ class App extends Component {
           id: "1",
           name: "nakaoka",
           img: "./images/monster01.png",
-          claps: 100
+          claps: [100, 0]
         }
       ],
       praiseUser: [
         {
           id: "2",
           name: "yamamoto",
-          img: "./images/monster02.png"
+          img: "./images/monster02.png",
+          claps: [100, 0]
         }
       ],
       text: "",
@@ -75,37 +76,37 @@ class App extends Component {
         id: "1",
         name: "nakaoka",
         img: "./images/monster01.png",
-        claps: 100
+        claps: [100, 0]
       },
       {
         id: "2",
         name: "yamamoto",
         img: "./images/monster02.png",
-        claps: 100
+        claps: [100, 0]
       },
       {
         id: "3",
         name: "tanaka",
         img: "./images/monster03.png",
-        claps: 100
+        claps: [100, 0]
       },
       {
         id: "4",
         name: "inoue",
         img: "./images/monster04.png",
-        claps: 100
+        claps: [100, 0]
       },
       {
         id: "5",
         name: "sakamoto",
         img: "./images/monster05.png",
-        claps: 100
+        claps: [100, 0]
       },
       {
         id: "6",
         name: "kimura",
         img: "./images/monster06.png",
-        claps: 100
+        claps: [100, 0]
       }
     ];
     return users;
@@ -169,7 +170,7 @@ class App extends Component {
 
   submit() {
     if (this.state.text.length < 5) {
-      alert("5文字以上入力して下さい。")
+      alert("5文字以上入力して下さい。");
       return;
     }
     let date = new Date();
