@@ -33,7 +33,7 @@ class App extends Component {
             <button className="btn btn-primary" onClick={this.submit}>投稿</button>
           </div>
         </div>
-        <div>{this.hoge()}</div>
+        <div>{this.showPosts()}</div>
         <button className="btn btn-danger mb-3" onClick={this.reset}>リセット</button>
       </div>
     );
@@ -174,35 +174,41 @@ class App extends Component {
       return;
     }
     let date = new Date();
+    let posts = this.state.posts;
     let newPost = {
+      id: this.state.posts.length,
       userImg: this.state.user[0].img,
       praiseUserImg: this.state.praiseUser[0].img,
       text: this.state.text,
       date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
     };
-    this.showPosts(newPost);
+    posts.push(newPost);
+    this.setState({posts: posts});
     this.setState({text: ""});
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
-  showPosts(post) {
-    let posts = this.state.posts;
-    posts.unshift(
-      <div className="p-4" key={posts.length}>
-        <div>
-          <img src={post.userImg} alt={post.userImg} className="c-image"/>
-          <img src="./images/arrow_right.png" alt="arrow_right" className="c-image"/>
-          <img src={post.praiseUserImg} alt={post.praiseUserImg} className="c-image"/>
+  showPosts() {
+    let postsState = this.state.posts;
+    let posts = [];
+    for (let post of postsState) {
+      posts.unshift(
+        <div className="p-4" key={post.id}>
+          <div>
+            <img src={post.userImg} alt={post.userImg} className="c-image"/>
+            <img src="./images/arrow_right.png" alt="arrow_right" className="c-image"/>
+            <img src={post.praiseUserImg} alt={post.praiseUserImg} className="c-image"/>
+          </div>
+          <p className="mb-3">{post.text}</p>
+          <div className="row m-0">
+            <img src="./images/clap.png" alt="clap" className="c-image__small col-auto p-0" onClick={this.incrementClap}/>
+            <span className="col-auto">0</span>
+            <span className="col text-right">{post.date}</span>
+          </div>
         </div>
-        <p className="mb-3">{post.text}</p>
-        <div className="row m-0">
-          <img src="./images/clap.png" alt="clap" className="c-image__small col-auto p-0" onClick={this.incrementClap}/>
-          <span className="col-auto">0</span>
-          <span className="col text-right">{post.date}</span>
-        </div>
-      </div>
-    );
-    this.setState({post: posts});
+      );
+    }
+    return posts;
   }
 
   incrementClap() {}
