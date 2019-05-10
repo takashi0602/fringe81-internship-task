@@ -78,7 +78,7 @@ class App extends Component {
   }
 
   createUsers() {
-    let users = [
+    const users = [
       {
         id: "1",
         name: "nakaoka",
@@ -184,10 +184,13 @@ class App extends Component {
     let posts = this.state.posts;
     let newPost = {
       id: this.state.posts.length,
+      userId: this.state.user[0].id,
       userImg: this.state.user[0].img,
+      praiseUserId: this.state.praiseUser[0].id,
       praiseUserImg: this.state.praiseUser[0].img,
       text: this.state.text,
-      date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+      date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`,
+      claps: []
     };
     posts.push(newPost);
     this.setState({posts: posts});
