@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactTooltip from 'react-tooltip'
 import './App.css';
+import { usersList } from './users'
 
 class App extends Component {
   render() {
@@ -9,20 +10,20 @@ class App extends Component {
         <div className="bg-info p-4">
           <div className="row align-items-center">
             <div className="col text-center">
-              <img src={this.state.user[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="" value={this.state.user[0].id} onChange={this.changeUser}>
+              <img src={this.state.user.img} alt={this.state.user.name} className="c-image__large d-block bg-white m-auto"/>
+              <select name="" id="" value={this.state.user.id} onChange={this.changeUser}>
                 {this.selectUsers()}
               </select>
             </div>
-            <div className="col text-white">拍手できる:{this.state.user[0].claps.possible}</div>
-            <div className="col text-white">拍手された:{this.state.user[0].claps.point}</div>
+            <div className="col text-white">拍手できる:{this.state.user.claps.possible}</div>
+            <div className="col text-white">拍手された:{this.state.user.claps.point}</div>
           </div>
         </div>
         <div className="bg-light p-4">
           <div className="row align-items-center">
             <div className="col-4 text-center">
-              <img src={this.state.praiseUser[0].img} alt={this.state.user[0].name} className="c-image__large d-block bg-white m-auto"/>
-              <select name="" id="" value={this.state.praiseUser[0].id} onChange={this.changePraiseUsers}>
+              <img src={this.state.praiseUser.img} alt={this.state.user.name} className="c-image__large d-block bg-white m-auto"/>
+              <select name="" id="" value={this.state.praiseUser.id} onChange={this.changePraiseUsers}>
                 {this.selectPraiseUsers()}
               </select>
             </div>
@@ -46,30 +47,11 @@ class App extends Component {
       this.state = JSON.parse(localStorage.getItem("state"));
     }
     else {
-      localStorage.setItem("users", JSON.stringify(this.createUsers()));
+      localStorage.setItem("users", JSON.stringify(usersList));
+      let users = JSON.parse(localStorage.getItem("users"));
       this.state = {
-        user: [
-          {
-            id: "1",
-            name: "nakaoka",
-            img: "./images/monster01.png",
-            claps: {
-              possible: 100,
-              point: 0
-            }
-          }
-        ],
-        praiseUser: [
-          {
-            id: "2",
-            name: "yamamoto",
-            img: "./images/monster02.png",
-            claps: {
-              possible: 100,
-              point: 0
-            }
-          }
-        ],
+        user: users[0],
+        praiseUser: users[1],
         text: "",
         posts: []
       };
@@ -86,66 +68,6 @@ class App extends Component {
     this.showPostButton = this.showPostButton.bind(this);
   }
 
-  createUsers() {
-    const users = [
-      {
-        id: "1",
-        name: "nakaoka",
-        img: "./images/monster01.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      },
-      {
-        id: "2",
-        name: "yamamoto",
-        img: "./images/monster02.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      },
-      {
-        id: "3",
-        name: "tanaka",
-        img: "./images/monster03.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      },
-      {
-        id: "4",
-        name: "inoue",
-        img: "./images/monster04.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      },
-      {
-        id: "5",
-        name: "sakamoto",
-        img: "./images/monster05.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      },
-      {
-        id: "6",
-        name: "kimura",
-        img: "./images/monster06.png",
-        claps: {
-          possible: 100,
-          point: 0
-        }
-      }
-    ];
-    return users;
-  }
-
   selectUsers() {
     let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
@@ -156,7 +78,7 @@ class App extends Component {
   }
 
   selectPraiseUsers() {
-    let activeUser = this.state.user[0];
+    let activeUser = this.state.user;
     let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
     for(let user of users) {
@@ -171,11 +93,11 @@ class App extends Component {
     let praiseUser = this.state.praiseUser;
     let users = JSON.parse(localStorage.getItem("users"));
     for (let user of users) {
-      if (user.id === e.target.value) activeUser[0] = user;
+      if (user.id === e.target.value) activeUser = user;
     }
     this.setState({user: activeUser});
-    if (activeUser[0].id === users[0].id) praiseUser[0] = users[1];
-    else praiseUser[0] = users[0];
+    if (activeUser.id === users[0].id) praiseUser = users[1];
+    else praiseUser = users[0];
     this.setState({praiseUser: praiseUser});
     localStorage.setItem('state', JSON.stringify(this.state));
   }
@@ -184,7 +106,7 @@ class App extends Component {
     let praiseUser = this.state.praiseUser;
     let users = JSON.parse(localStorage.getItem("users"));
     for (let user of users) {
-      if (user.id === e.target.value) praiseUser[0] = user
+      if (user.id === e.target.value) praiseUser = user
     }
     this.setState({praiseUser: praiseUser});
     localStorage.setItem('state', JSON.stringify(this.state));
@@ -199,10 +121,10 @@ class App extends Component {
     let posts = this.state.posts;
     let newPost = {
       id: this.state.posts.length,
-      userId: this.state.user[0].id,
-      userImg: this.state.user[0].img,
-      praiseUserId: this.state.praiseUser[0].id,
-      praiseUserImg: this.state.praiseUser[0].img,
+      userId: this.state.user.id,
+      userImg: this.state.user.img,
+      praiseUserId: this.state.praiseUser.id,
+      praiseUserImg: this.state.praiseUser.img,
       text: this.state.text,
       date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`,
       claps: {
@@ -257,14 +179,14 @@ class App extends Component {
   }
 
   incrementClap(e) {
-    let user = this.state.user[0];
+    let user = this.state.user;
     let post = this.state.posts;
     let id = e.target.id;
     let users = JSON.parse(localStorage.getItem("users")).map((user) => {
       if (user.id === post[id].userId || user.id === post[id].praiseUserId) {
         user.claps.point += 1;
       }
-      if (user.id === this.state.user[0].id) {
+      if (user.id === this.state.user.id) {
         user.claps.possible -= 2;
       }
       return user;
@@ -283,7 +205,7 @@ class App extends Component {
   }
 
   showClapButton(id) {
-    let user = this.state.user[0];
+    let user = this.state.user;
     let post = this.state.posts[id];
     if (post.userId === user.id || post.praiseUserId === user.id) return true;
     if (user.claps.possible < 2) return true;
