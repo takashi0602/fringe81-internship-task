@@ -43,14 +43,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     if (localStorage.getItem("users")) {
-      const activeUser = JSON.parse(localStorage.getItem("user"));
-      const users = JSON.parse(localStorage.getItem("users")).filter((user) => {
+      const users = JSON.parse(localStorage.getItem("users"));
+      const activeUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : users[0];
+      const praiseUsers = users.filter((user) => {
         return activeUser.id !== user.id;
       });
       const posts = localStorage.getItem("posts") ? JSON.parse(localStorage.getItem("posts")) : [];
       this.state = {
         user: activeUser,
-        praiseUser: users[0],
+        praiseUser: praiseUsers[0],
         text: "",
         posts: posts
       };
@@ -91,7 +92,6 @@ class App extends Component {
     let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
     for(let user of users) {
-      // user以外をoptionで表示する
       if (user.id !== activeUser.id) options.push(<option key={user.id} value={user.id}>{user.name}</option>);
     }
     return options;
