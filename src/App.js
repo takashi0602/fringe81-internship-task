@@ -31,7 +31,7 @@ class App extends Component {
             </div>
           </div>
           <div className="text-right">
-            <button className="btn btn-primary" onClick={this.submit}>投稿</button>
+            <button className="btn btn-primary" onClick={this.submit} disabled={this.showPostButton()}>投稿</button>
           </div>
         </div>
         <div>{this.showPosts()}</div>
@@ -83,6 +83,7 @@ class App extends Component {
     this.submit = this.submit.bind(this);
     this.showPosts = this.showPosts.bind(this);
     this.showClapButton = this.showClapButton.bind(this);
+    this.showPostButton = this.showPostButton.bind(this);
   }
 
   createUsers() {
@@ -194,10 +195,6 @@ class App extends Component {
   }
 
   submit() {
-    if (this.state.text.length < 5) {
-      alert("5文字以上入力して下さい。");
-      return;
-    }
     let date = new Date();
     let posts = this.state.posts;
     let newPost = {
@@ -235,7 +232,7 @@ class App extends Component {
             <input type="image" src="./images/clap.png" alt="clap" id={post.id} className="c-image__small col-auto p-0" onClick={this.incrementClap} disabled={this.showClapButton(post.id)}/>
             <span className="col-auto" data-tip={this.tooltipText(post)}>
               {post.claps.total}
-              <ReactTooltip effect="solid" place="bottom" multiline="true" />
+              <ReactTooltip effect="solid" place="bottom" multiline={true} />
             </span>
             <span className="col text-right">{post.date}</span>
           </div>
@@ -292,6 +289,10 @@ class App extends Component {
     if (user.claps.possible < 2) return true;
     if (post.claps.users.hasOwnProperty(user.id) && post.claps.users[user.id] > 14) return true;
     return false;
+  }
+
+  showPostButton() {
+    return this.state.text.length < 5;
   }
 
   reset() {
