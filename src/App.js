@@ -13,8 +13,8 @@ class App extends Component {
                 {this.selectUsers()}
               </select>
             </div>
-            <div className="col text-white">拍手できる:{this.state.user[0].claps[1]}</div>
-            <div className="col text-white">拍手された:0</div>
+            <div className="col text-white">拍手できる:{this.state.user[0].claps.possible}</div>
+            <div className="col text-white">拍手された:{this.state.user[0].claps.point}</div>
           </div>
         </div>
         <div className="bg-light p-4">
@@ -52,7 +52,10 @@ class App extends Component {
             id: "1",
             name: "nakaoka",
             img: "./images/monster01.png",
-            claps: [100, 0]
+            claps: {
+              possible: 100,
+              point: 0
+            }
           }
         ],
         praiseUser: [
@@ -60,7 +63,10 @@ class App extends Component {
             id: "2",
             name: "yamamoto",
             img: "./images/monster02.png",
-            claps: [100, 0]
+            claps: {
+              possible: 100,
+              point: 0
+            }
           }
         ],
         text: "",
@@ -75,6 +81,7 @@ class App extends Component {
     this.changeTextArea = this.changeTextArea.bind(this);
     this.submit = this.submit.bind(this);
     this.showPosts = this.showPosts.bind(this);
+    this.showClapButton = this.showClapButton.bind(this);
   }
 
   createUsers() {
@@ -83,76 +90,94 @@ class App extends Component {
         id: "1",
         name: "nakaoka",
         img: "./images/monster01.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       },
       {
         id: "2",
         name: "yamamoto",
         img: "./images/monster02.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       },
       {
         id: "3",
         name: "tanaka",
         img: "./images/monster03.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       },
       {
         id: "4",
         name: "inoue",
         img: "./images/monster04.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       },
       {
         id: "5",
         name: "sakamoto",
         img: "./images/monster05.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       },
       {
         id: "6",
         name: "kimura",
         img: "./images/monster06.png",
-        claps: [100, 0]
+        claps: {
+          possible: 100,
+          point: 0
+        }
       }
     ];
     return users;
   }
 
   selectUsers() {
-    let users = this.createUsers();
+    let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
-    for(let i in users) {
-      options.push(<option key={i} value={users[i].id}>{users[i].name}</option>);
+    for(let user of users) {
+      options.push(<option key={user.id} value={user.id}>{user.name}</option>);
     }
     return options;
   }
 
   selectPraiseUsers() {
-    let user = this.state.user[0];
-    let users = this.createUsers();
+    let activeUser = this.state.user[0];
+    let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
-    for(let i in users) {
+    for(let user of users) {
       // user以外をoptionで表示する
-      if (users[i].id !== user.id) options.push(<option key={i} value={users[i].id}>{users[i].name}</option>);
+      if (user.id !== activeUser.id) options.push(<option key={user.id} value={user.id}>{user.name}</option>);
     }
     return options;
   }
 
   changeUser(e) {
-    let user = this.state.user;
+    let activeUser = this.state.user;
     let praiseUser = this.state.praiseUser;
-    let users = this.createUsers();
-    for (let i in users) {
-      if (users[i].id === e.target.value) user[0] = users[i]
+    let users = JSON.parse(localStorage.getItem("users"));
+    for (let user of users) {
+      if (user.id === e.target.value) activeUser[0] = user;
     }
-    this.setState({user: user});
+    this.setState({user: activeUser});
 
     // userとpraiseUserの値が同じ場合、praiseUserの値を変更
-    if (user[0].id === praiseUser[0].id) {
+    if (activeUser[0].id === praiseUser[0].id) {
 
       // user.idが1なら、users.idが2の値を返す
-      if (user[0].id === "1") praiseUser[0] = users[1];
+      if (activeUser[0].id === "1") praiseUser[0] = users[1];
 
       // user.idが1以外なら、users.idが1の値を返す
       else praiseUser[0] = users[0];
@@ -162,12 +187,12 @@ class App extends Component {
   }
 
   changePraiseUsers(e) {
-    let user = this.state.praiseUser;
-    let users = this.createUsers();
-    for (let i in users) {
-      if (users[i].id === e.target.value) user[0] = users[i]
+    let praiseUser = this.state.praiseUser;
+    let users = JSON.parse(localStorage.getItem("users"));
+    for (let user in users) {
+      if (user.id === e.target.value) praiseUser[0] = user
     }
-    this.setState({praiseUser: user});
+    this.setState({praiseUser: praiseUser});
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
@@ -190,7 +215,10 @@ class App extends Component {
       praiseUserImg: this.state.praiseUser[0].img,
       text: this.state.text,
       date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`,
-      claps: []
+      claps: {
+        total: 0,
+        users: {}
+      }
     };
     posts.push(newPost);
     this.setState({posts: posts});
@@ -211,8 +239,8 @@ class App extends Component {
           </div>
           <p className="mb-3">{post.text}</p>
           <div className="row m-0">
-            <img src="./images/clap.png" alt="clap" className="c-image__small col-auto p-0" onClick={this.incrementClap}/>
-            <span className="col-auto">0</span>
+            <input type="image" src="./images/clap.png" alt="clap" id={post.id} className="c-image__small col-auto p-0" onClick={this.incrementClap} disabled={this.showClapButton(post.id)}/>
+            <span className="col-auto">{post.claps.total}</span>
             <span className="col text-right">{post.date}</span>
           </div>
         </div>
@@ -221,7 +249,41 @@ class App extends Component {
     return posts;
   }
 
-  incrementClap() {}
+  incrementClap(e) {
+    let user = this.state.user[0];
+    let post = this.state.posts;
+    let id = e.target.id;
+    let users = JSON.parse(localStorage.getItem("users")).map((user) => {
+      if (user.id === post[id].userId || user.id === post[id].praiseUserId) {
+        user.claps.point += 1;
+      }
+      if (user.id === this.state.user[0].id) {
+        user.claps.possible -= 2;
+      }
+      return user;
+    });
+    post[id].claps.total += 1;
+    user.claps.possible -= 2;
+    if (post[id].claps.users.hasOwnProperty(user.id)) {
+      post[id].claps.users[user.id] += 1;
+    }
+    else {
+      post[id].claps.users[user.id] = 1;
+    }
+    this.setState({posts: post});
+    localStorage.setItem("state", JSON.stringify(this.state));
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+
+  showClapButton(id) {
+    // TODO
+    // let user = this.state.user[0];
+    // let post = this.state.posts[id];
+    // if (post.userId === user.id || post.praiseUserId === user.id) return true;
+    // if (user.claps.possible < 2) return true;
+    // if (post.claps.users.hasOwnProperty(user.id) && post.claps.users[user.id] > 15) return true;
+    return false;
+  }
 
   reset() {
     localStorage.clear();
