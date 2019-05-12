@@ -188,7 +188,7 @@ class App extends Component {
   }
 
   incrementClap(e) {
-    let user = this.state.user;
+    let activeUser = this.state.user;
     let posts = this.state.posts;
     let id = e.target.id;
     let users = JSON.parse(localStorage.getItem("users")).map((user) => {
@@ -201,26 +201,26 @@ class App extends Component {
       return user;
     });
     posts[id].claps.total += 1;
-    user.claps.possible -= 2;
-    if (posts[id].claps.users.hasOwnProperty(user.id)) {
-      posts[id].claps.users[user.id] += 1;
+    activeUser.claps.possible -= 2;
+    if (posts[id].claps.users.hasOwnProperty(activeUser.id)) {
+      posts[id].claps.users[activeUser.id] += 1;
     }
     else {
-      posts[id].claps.users[user.id] = 1;
+      posts[id].claps.users[activeUser.id] = 1;
     }
-    this.setState({user: user});
+    this.setState({user: activeUser});
     this.setState({posts: posts});
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(activeUser));
     localStorage.setItem("posts", JSON.stringify(posts));
     localStorage.setItem("users", JSON.stringify(users));
   }
 
   showClapButton(id) {
-    let user = this.state.user;
+    let activeUser = this.state.user;
     let post = this.state.posts[id];
-    if (post.userId === user.id || post.praiseUserId === user.id) return true;
-    if (user.claps.possible < 2) return true;
-    if (post.claps.users.hasOwnProperty(user.id) && post.claps.users[user.id] > 14) return true;
+    if (post.userId === activeUser.id || post.praiseUserId === activeUser.id) return true;
+    if (activeUser.claps.possible < 2) return true;
+    if (post.claps.users.hasOwnProperty(activeUser.id) && post.claps.users[activeUser.id] > 14) return true;
     return false;
   }
 
