@@ -131,7 +131,7 @@ class App extends Component {
     let date = new Date();
     let posts = this.state.posts;
     let newPost = {
-      id: this.state.posts.length,
+      id: posts.length,
       userId: this.state.user.id,
       userImg: this.state.user.img,
       praiseUserId: this.state.praiseUser.id,
@@ -201,7 +201,7 @@ class App extends Component {
       if (user.id === posts[id].userId || user.id === posts[id].praiseUserId) {
         user.claps.point += 1;
       }
-      if (user.id === this.state.user.id) {
+      if (user.id === activeUser.id) {
         user.claps.possible -= 2;
       }
       return user;
