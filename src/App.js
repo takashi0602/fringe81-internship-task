@@ -176,7 +176,7 @@ class App extends Component {
     return posts;
   }
 
-  // ツールチップ内のメッセージを取得
+  // ツールチップ内のメッセージを取得(拍手が1つ以上の投稿のみ)
   tooltipText(post) {
     let users = JSON.parse(localStorage.getItem("users")).filter((user) => {
       return post.claps.users.hasOwnProperty(user.id);
@@ -188,6 +188,7 @@ class App extends Component {
       text += `${user.name}: ${post.claps.users[user.id]}`;
       if (count < users.length) text += "<br>"
     }
+    if (text.length !== 0) text = "拍手一覧<br>" + text;
     return text;
   }
 
