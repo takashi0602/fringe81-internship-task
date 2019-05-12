@@ -68,14 +68,11 @@ class App extends Component {
       };
     }
 
-    this.incrementClap = this.incrementClap.bind(this);
     this.changeUser = this.changeUser.bind(this);
     this.changePraiseUsers = this.changePraiseUsers.bind(this);
     this.changeTextArea = this.changeTextArea.bind(this);
     this.submit = this.submit.bind(this);
-    this.showPosts = this.showPosts.bind(this);
-    this.showClapButton = this.showClapButton.bind(this);
-    this.showPostButton = this.showPostButton.bind(this);
+    this.incrementClap = this.incrementClap.bind(this);
   }
 
   // ユーザー一覧の取得
