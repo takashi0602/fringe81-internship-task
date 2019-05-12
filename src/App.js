@@ -268,12 +268,11 @@ class App extends Component {
   }
 
   showClapButton(id) {
-    // TODO
-    // let user = this.state.user[0];
-    // let post = this.state.posts[id];
-    // if (post.userId === user.id || post.praiseUserId === user.id) return true;
-    // if (user.claps.possible < 2) return true;
-    // if (post.claps.users.hasOwnProperty(user.id) && post.claps.users[user.id] > 15) return true;
+    let user = this.state.user[0];
+    let post = this.state.posts[id];
+    if (post.userId === user.id || post.praiseUserId === user.id) return true;
+    if (user.claps.possible < 2) return true;
+    if (post.claps.users.hasOwnProperty(user.id) && post.claps.users[user.id] > 14) return true;
     return false;
   }
 
