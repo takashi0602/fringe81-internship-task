@@ -44,18 +44,28 @@ class App extends Component {
   constructor(props) {
     super(props);
     if (localStorage.getItem("users")) {
-      this.state = JSON.parse(localStorage.getItem("state"));
+      const activeUser = JSON.parse(localStorage.getItem("user"));
+      const users = JSON.parse(localStorage.getItem("users")).filter((user) => {
+        return activeUser.id !== user.id;
+      });
+      const posts = localStorage.getItem("posts") ? JSON.parse(localStorage.getItem("posts")) : [];
+      this.state = {
+        user: activeUser,
+        praiseUser: users[0],
+        text: "",
+        posts: posts
+      };
     }
     else {
       localStorage.setItem("users", JSON.stringify(usersList));
       let users = JSON.parse(localStorage.getItem("users"));
+      localStorage.setItem("user", JSON.stringify(users[0]));
       this.state = {
         user: users[0],
         praiseUser: users[1],
         text: "",
         posts: []
       };
-      localStorage.setItem("state", JSON.stringify(this.state));
     }
 
     this.incrementClap = this.incrementClap.bind(this);
@@ -99,7 +109,7 @@ class App extends Component {
     if (activeUser.id === users[0].id) praiseUser = users[1];
     else praiseUser = users[0];
     this.setState({praiseUser: praiseUser});
-    localStorage.setItem('state', JSON.stringify(this.state));
+    localStorage.setItem('user', JSON.stringify(activeUser));
   }
 
   changePraiseUsers(e) {
@@ -109,7 +119,6 @@ class App extends Component {
       if (user.id === e.target.value) praiseUser = user
     }
     this.setState({praiseUser: praiseUser});
-    localStorage.setItem('state', JSON.stringify(this.state));
   }
 
   changeTextArea(e) {
@@ -135,7 +144,7 @@ class App extends Component {
     posts.push(newPost);
     this.setState({posts: posts});
     this.setState({text: ""});
-    localStorage.setItem('state', JSON.stringify(this.state));
+    localStorage.setItem('posts', JSON.stringify(posts));
   }
 
   showPosts() {
@@ -180,10 +189,10 @@ class App extends Component {
 
   incrementClap(e) {
     let user = this.state.user;
-    let post = this.state.posts;
+    let posts = this.state.posts;
     let id = e.target.id;
     let users = JSON.parse(localStorage.getItem("users")).map((user) => {
-      if (user.id === post[id].userId || user.id === post[id].praiseUserId) {
+      if (user.id === posts[id].userId || user.id === posts[id].praiseUserId) {
         user.claps.point += 1;
       }
       if (user.id === this.state.user.id) {
@@ -191,16 +200,18 @@ class App extends Component {
       }
       return user;
     });
-    post[id].claps.total += 1;
+    posts[id].claps.total += 1;
     user.claps.possible -= 2;
-    if (post[id].claps.users.hasOwnProperty(user.id)) {
-      post[id].claps.users[user.id] += 1;
+    if (posts[id].claps.users.hasOwnProperty(user.id)) {
+      posts[id].claps.users[user.id] += 1;
     }
     else {
-      post[id].claps.users[user.id] = 1;
+      posts[id].claps.users[user.id] = 1;
     }
-    this.setState({posts: post});
-    localStorage.setItem("state", JSON.stringify(this.state));
+    this.setState({user: user});
+    this.setState({posts: posts});
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("posts", JSON.stringify(posts));
     localStorage.setItem("users", JSON.stringify(users));
   }
 
