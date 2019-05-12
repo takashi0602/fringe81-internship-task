@@ -36,7 +36,6 @@ class App extends Component {
           </div>
         </div>
         <div>{this.showPosts()}</div>
-        <button className="btn btn-danger mb-3" onClick={this.reset}>リセット</button>
       </div>
     );
   }
@@ -226,10 +225,6 @@ class App extends Component {
 
   showPostButton() {
     return this.state.text.length < 5;
-  }
-
-  reset() {
-    localStorage.clear();
   }
 }
 
