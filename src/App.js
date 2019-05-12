@@ -78,6 +78,7 @@ class App extends Component {
     this.showPostButton = this.showPostButton.bind(this);
   }
 
+  // ユーザー一覧の取得
   selectUsers() {
     let users = JSON.parse(localStorage.getItem("users"));
     let options = [];
@@ -87,6 +88,7 @@ class App extends Component {
     return options;
   }
 
+  // 褒めたいユーザー一覧の取得
   selectPraiseUsers() {
     let activeUser = this.state.user;
     let users = JSON.parse(localStorage.getItem("users"));
@@ -97,6 +99,7 @@ class App extends Component {
     return options;
   }
 
+  // 現在のユーザーを変更
   changeUser(e) {
     let activeUser = this.state.user;
     let praiseUser = this.state.praiseUser;
@@ -111,6 +114,7 @@ class App extends Component {
     localStorage.setItem('user', JSON.stringify(activeUser));
   }
 
+  // 現在の褒めたいユーザーを変更
   changePraiseUsers(e) {
     let praiseUser = this.state.praiseUser;
     let users = JSON.parse(localStorage.getItem("users"));
@@ -120,10 +124,12 @@ class App extends Component {
     this.setState({praiseUser: praiseUser});
   }
 
+  // テキストエリアに記載された文字の取得
   changeTextArea(e) {
     this.setState({text: e.target.value});
   }
 
+  // 投稿
   submit() {
     let date = new Date();
     let posts = this.state.posts;
@@ -146,6 +152,7 @@ class App extends Component {
     localStorage.setItem('posts', JSON.stringify(posts));
   }
 
+  // 投稿一覧の取得
   showPosts() {
     let postsState = this.state.posts;
     let posts = [];
@@ -172,6 +179,7 @@ class App extends Component {
     return posts;
   }
 
+  // ツールチップ内のメッセージを取得
   tooltipText(post) {
     let users = JSON.parse(localStorage.getItem("users")).filter((user) => {
       return post.claps.users.hasOwnProperty(user.id);
@@ -186,6 +194,7 @@ class App extends Component {
     return text;
   }
 
+  // 拍手
   incrementClap(e) {
     let activeUser = this.state.user;
     let posts = this.state.posts;
@@ -214,6 +223,7 @@ class App extends Component {
     localStorage.setItem("users", JSON.stringify(users));
   }
 
+  // 拍手ボタンの表示・非表示
   showClapButton(id) {
     let activeUser = this.state.user;
     let post = this.state.posts[id];
@@ -223,6 +233,7 @@ class App extends Component {
     return false;
   }
 
+  // 投稿ボタンの表示・非表示
   showPostButton() {
     return this.state.text.length < 5;
   }
