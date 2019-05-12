@@ -172,24 +172,16 @@ class App extends Component {
       if (user.id === e.target.value) activeUser[0] = user;
     }
     this.setState({user: activeUser});
-
-    // userとpraiseUserの値が同じ場合、praiseUserの値を変更
-    if (activeUser[0].id === praiseUser[0].id) {
-
-      // user.idが1なら、users.idが2の値を返す
-      if (activeUser[0].id === "1") praiseUser[0] = users[1];
-
-      // user.idが1以外なら、users.idが1の値を返す
-      else praiseUser[0] = users[0];
-      this.setState({praiseUser: praiseUser});
-    }
+    if (activeUser[0].id === users[0].id) praiseUser[0] = users[1];
+    else praiseUser[0] = users[0];
+    this.setState({praiseUser: praiseUser});
     localStorage.setItem('state', JSON.stringify(this.state));
   }
 
   changePraiseUsers(e) {
     let praiseUser = this.state.praiseUser;
     let users = JSON.parse(localStorage.getItem("users"));
-    for (let user in users) {
+    for (let user of users) {
       if (user.id === e.target.value) praiseUser[0] = user
     }
     this.setState({praiseUser: praiseUser});
