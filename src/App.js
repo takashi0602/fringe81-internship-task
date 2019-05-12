@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip'
 import './App.css';
 
 class App extends Component {
@@ -232,13 +233,30 @@ class App extends Component {
           <p className="mb-3">{post.text}</p>
           <div className="row m-0">
             <input type="image" src="./images/clap.png" alt="clap" id={post.id} className="c-image__small col-auto p-0" onClick={this.incrementClap} disabled={this.showClapButton(post.id)}/>
-            <span className="col-auto">{post.claps.total}</span>
+            <span className="col-auto" data-tip={this.tooltipText(post)}>
+              {post.claps.total}
+              <ReactTooltip effect="solid" place="bottom" multiline="true" />
+            </span>
             <span className="col text-right">{post.date}</span>
           </div>
         </div>
       );
     }
     return posts;
+  }
+
+  tooltipText(post) {
+    let users = JSON.parse(localStorage.getItem("users")).filter((user) => {
+      return post.claps.users.hasOwnProperty(user.id);
+    });
+    let text = "";
+    let count = 0;
+    for (let user of users) {
+      count += 1;
+      text += `${user.name}: ${post.claps.users[user.id]}`;
+      if (count < users.length) text += "<br>"
+    }
+    return text;
   }
 
   incrementClap(e) {
